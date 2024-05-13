@@ -35,7 +35,7 @@ namespace CourseCatalogAPIWebApp.Models
 
         [Display(Name = "Роль")]
         public int RoleId { get; set; }
-        public virtual Role Role { get; set; } = null!;
+        public virtual Role Role { get; set; }
 
         public virtual ICollection<Course> Courses { get; set; }
     }

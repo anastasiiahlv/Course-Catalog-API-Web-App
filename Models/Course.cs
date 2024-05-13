@@ -17,8 +17,8 @@ namespace CourseCatalogAPIWebApp.Models
         public string Info { get; set; } = null!;
 
         [Display(Name = "Рівень")]
-        public int LevelId { get; set; }
-        public virtual Level Level { get; set; } = null!;
+        public int LevelId { get; set; } 
+        public virtual Level? Level { get; set; }
 
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
         public virtual ICollection<Language> Languages { get; set; } = new List<Language>();
