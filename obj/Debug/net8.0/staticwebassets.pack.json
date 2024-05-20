@@ -5,16 +5,16 @@
       "PackagePath": "staticwebassets\\CourseCatalogAPIWebApp.bundle.scp.css"
     },
     {
-      "Id": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\Index.html",
-      "PackagePath": "staticwebassets\\Index.html"
-    },
-    {
-      "Id": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\css\\site.css",
-      "PackagePath": "staticwebassets\\css\\site.css"
+      "Id": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\css\\lab2.css",
+      "PackagePath": "staticwebassets\\css\\lab2.css"
     },
     {
       "Id": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
     },
     {
       "Id": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\js\\lab2.js",

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CourseCatalogAPIWebApp.Models
 {
@@ -35,7 +36,7 @@ namespace CourseCatalogAPIWebApp.Models
 
         [Display(Name = "Роль")]
         public int RoleId { get; set; }
-        public virtual Role Role { get; set; }
+        public virtual Role? Role { get; set; } 
 
         public virtual ICollection<Course> Courses { get; set; }
     }

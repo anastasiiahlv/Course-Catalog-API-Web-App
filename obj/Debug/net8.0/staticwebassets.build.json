@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "krcCcKMUIWWU+vewY356WKQjkvhgs23ypLEA3BJhBJ8=",
+  "Hash": "/34PvWHCq8NzW7ukjJr+NOJNlCesJIn+ycJccGYJI64=",
   "Source": "CourseCatalogAPIWebApp",
   "BasePath": "_content/CourseCatalogAPIWebApp",
   "Mode": "Default",
@@ -55,12 +55,12 @@
       "OriginalItemSpec": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\CourseCatalogAPIWebApp.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\css\\site.css",
+      "Identity": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\css\\lab2.css",
       "SourceId": "CourseCatalogAPIWebApp",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\",
       "BasePath": "_content/CourseCatalogAPIWebApp",
-      "RelativePath": "css/site.css",
+      "RelativePath": "css/lab2.css",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -71,7 +71,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\css\\site.css"
+      "OriginalItemSpec": "wwwroot\\css\\lab2.css"
     },
     {
       "Identity": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\favicon.ico",
@@ -93,12 +93,12 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
-      "Identity": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\Index.html",
+      "Identity": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\index.html",
       "SourceId": "CourseCatalogAPIWebApp",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\",
       "BasePath": "_content/CourseCatalogAPIWebApp",
-      "RelativePath": "Index.html",
+      "RelativePath": "index.html",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -109,7 +109,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Index.html"
+      "OriginalItemSpec": "wwwroot\\index.html"
     },
     {
       "Identity": "C:\\Users\\USER\\Desktop\\CourseCatalogAPIWebApp\\wwwroot\\js\\lab2.js",

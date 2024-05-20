@@ -1,61 +1,35 @@
-﻿const uri = 'api/Courses';
-const levels_uri = 'api/Levels';
-const categories_uri = 'api/Categories';
-const languages_uri = 'api/Languages';
-const participants_uri = 'api/Participants';
+﻿const uri = 'api/Participants';
+const role_uri = 'api/Roles';
 
-let courses = [];
-
-function getCourses() {
-    fetch(uri)
-        .then(response => response.json())
-        .then(data => _displayCourses(data))
-        .catch(error => console.error('Помилка в отриманні курсів.', error));
-}
-
-function getLevels() {
-    fetch(levels_uri)
-        .then(response => response.json())
-        .then(data => _displayLevels(data))
-        .catch(error => console.error('Помилка в отриманні рівнів курсу.', error));
-}
-
-function getCategories() {
-    fetch(categories_uri)
-        .then(response => response.json())
-        .then(data => _displayCategories(data))
-        .catch(error => console.error('Помилка в отриманні категорій.', error));
-}
-
-function getLanguages() {
-    fetch(languages_uri)
-        .then(response => response.json())
-        .then(data => _displayLanguages(data))
-        .catch(error => console.error('Помилка в отриманні мов.', error));
-}
+let participants = [];
 
 function getParticipants() {
-    fetch(participants_uri)
+    fetch(uri)
         .then(response => response.json())
-        .then(data => _displayParticipants(data))
-        .catch(error => console.error('Помилка в отриманні учасників курсу.', error));
+        .then(r => _displayParticipants(r.data))
+        .catch(error => console.error('Неможливо отримати користувачів.', error));
 }
 
-function addCourse() {
-    const addNameTextbox = document.getElementById('add-name');
-    const addInfoTextbox = document.getElementById('add-info');
-    const addLevelTextbox = document.getElementById('add-level');
-    const addCategoryTextbox = document.getElementById('add-category');
-    const addLanguageTextbox = document.getElementById('add-language');
-    const addTeacherTextbox = document.getElementById('add-teacher');
+function getRoles() {
+    fetch(role_uri)
+        .then(response => response.json())
+        .then(r => _displayRoles(r.data))
+        .catch(error => console.error('Неможливо отримати ролі.', error));
+}
 
-    const course = {
-        name: addNameTextbox.value.trim(),
-        info: addInfoTextbox.value.trim(),
-        levelId: addLevelTextbox.value,
-        categoryId: addCategoryTextbox.value,
-        languageId: addLanguageTextbox.value,
-        participantId: addTeacherTextbox.value,
+function addParticipant() {
+    const addFirstNameTextbox = document.getElementById('add-firstName');
+    const addLastNameTextbox = document.getElementById('add-lastName');
+    const addEmailTextbox = document.getElementById('add-email');
+    const addPhoneNumberTextbox = document.getElementById('add-phoneNumber');
+    const addRoleSelect = document.getElementById('add-role');
+
+    const participant = {
+        firstName: addFirstNameTextbox.value.trim(),
+        lastName: addLastNameTextbox.value.trim(),
+        email: addEmailTextbox.value.trim(),
+        phoneNumber: addPhoneNumberTextbox.value.trim(),
+        roleId: addRoleSelect.value
     };
 
     fetch(uri, {
@@ -64,61 +38,88 @@ function addCourse() {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(course)
+        body: JSON.stringify(participant)
     })
-        .then(response => response.json())
-        .then(() => {
-            getCourses();
-            addNameTextbox.value = '';
-            addInfoTextbox.value = '';
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(error => { throw new Error(error.message); });
+            }
+            return response.json();
         })
-        .catch(error => console.error('Помилка в додаванні курсу.', error));
+        .then(() => {
+            getParticipants();
+            addFirstNameTextbox.value = '';
+            addLastNameTextbox.value = '';
+            addEmailTextbox.value = '';
+            addPhoneNumberTextbox.value = '';
+
+            document.getElementById('error-message').style.display = 'none';
+        })
+        .catch(error => {
+            if (error.errors) {
+                showError(`Помилки валідації: ${error.errors.join(', ')}`);
+            } else {
+                showError(`Помилка додавання користувача: ${error.message}`);
+            }
+            console.error('Неможливо додати користувача.', error);
+        });
 }
 
-function deleteCourse(id) {
+function deleteParticipant(id) {
     fetch(`${uri}/${id}`, {
         method: 'DELETE'
     })
-        .then(() => getCourses())
-        .catch(error => console.error('Помилка у видаленні курсу.', error));
+        .then(() => getParticipants())
+        .catch(error => console.error('Неможливо видалити користувача.', error));
 }
 
 function displayEditForm(id) {
-    const course = courses.find(course => course.id === id);
+    const participant = participants.find(p => p.participantId === id);
 
-    document.getElementById('edit-id').value = course.id;
-    document.getElementById('edit-name').value = course.name;
-    document.getElementById('edit-info').value = course.info;
-    document.getElementById('edit-level').value = course.levelId;
-    document.getElementById('edit-categories').value = course.categories;
-    document.getElementById('edit-languages').value = course.languages;
-    document.getElementById('edit-participants').value = course.participants;
+    document.getElementById('edit-id').value = participant.participantId;
+    document.getElementById('edit-firstName').value = participant.firstName;
+    document.getElementById('edit-lastName').value = participant.lastName;
+    document.getElementById('edit-email').value = participant.email;
+    document.getElementById('edit-phoneNumber').value = participant.phoneNumber;
+    document.getElementById('edit-role').value = participant.roleId;
     document.getElementById('editForm').style.display = 'block';
 }
 
-function updateCourse() {
-    const courseId = document.getElementById('edit-id').value;
-    const course = {
-        id: parseInt(courseId, 10),
-        name: document.getElementById('edit-name').value.trim(),
-        info: document.getElementById('edit-info').value.trim(),
-        levelId: document.getElementById('edit-level').value.trim(),
-        categories: document.getElementById('edit-category').value.trim(),
-        languages: document.getElementById('edit-language').value.trim(),
-        participants: document.getElementById('edit-teacher').value.trim(),
+function updateParticipant() {
+    const participantId = document.getElementById('edit-id').value;
+
+    const participant = {
+        id: parseInt(participantId, 10),
+        firstName: document.getElementById('edit-firstName').value.trim(),
+        lastName: document.getElementById('edit-lastName').value.trim(),
+        email: document.getElementById('edit-email').value.trim(),
+        phoneNumber: document.getElementById('edit-phoneNumber').value.trim(),
+        roleId: document.getElementById('edit-role').value.trim()
     };
 
-    fetch(`${uri}/${courseId}`, {
+    fetch(`${uri}/${participantId}`, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(course)
+        body: JSON.stringify(participant)
     })
-        .then(() => getCourses())
-        .catch(error => console.error('Помилка в оновленні курсу.', error));
-
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(error => { throw new Error(error.message); });
+            }
+            return response.json();
+        })
+        .then(() => {
+            getParticipants();
+           
+            document.getElementById('error-message').style.display = 'none';
+        })
+        .catch(error => {
+            showError(`Помилка оновлення інформації про користувача. ${error.message}`);
+            console.error('Неможливо оновити інформацію про користувача.', error);
+        });
     closeInput();
 
     return false;
@@ -129,71 +130,83 @@ function closeInput() {
 }
 
 
-function _displayCourses(data) {
-    const tBody = document.getElementById('courses');
+function _displayParticipants(data) {
+    const tBody = document.getElementById('participants');
     tBody.innerHTML = '';
 
 
     const button = document.createElement('button');
 
-    data.forEach(course => {
+    data.forEach(p => {
         let editButton = button.cloneNode(false);
-        editButton.innerText = 'Edit';
-        editButton.setAttribute('onclick', `displayEditForm(${course.id})`);
+        editButton.innerText = 'Редагувати';
+        editButton.setAttribute('onclick', `displayEditForm(${p.participantId})`);
 
         let deleteButton = button.cloneNode(false);
-        deleteButton.innerText = 'Delete';
-        deleteButton.setAttribute('onclick', `deleteCourse(${course.id})`);
+        deleteButton.innerText = 'Видалити';
+        deleteButton.setAttribute('onclick', `deleteParticipant(${p.participantId})`);
 
         let tr = tBody.insertRow();
 
-
         let td1 = tr.insertCell(0);
-        let textNode = document.createTextNode(course.name);
-        td1.appendChild(textNode);
+        let textNodeFirstName = document.createTextNode(p.firstName);
+        td1.appendChild(textNodeFirstName);
 
         let td2 = tr.insertCell(1);
-        let textNodeInfo = document.createTextNode(course.info);
-        td2.appendChild(textNodeInfo);
+        let textNodeLastName = document.createTextNode(p.lastName);
+        td2.appendChild(textNodeLastName);
 
         let td3 = tr.insertCell(2);
-        let textNodeLevel = document.createTextNode(course.level);
-        td3.appendChild(textNodeLevel);
+        let textNodeEmail = document.createTextNode(p.email);
+        td3.appendChild(textNodeEmail);
 
         let td4 = tr.insertCell(3);
-        let textNodeCategory = document.createTextNode(course.categories);
-        td4.appendChild(textNodeCategory);
+        let textNodePhoneNumber = document.createTextNode(p.phoneNumber);
+        td4.appendChild(textNodePhoneNumber);
 
         let td5 = tr.insertCell(4);
-        let textNodeLanguage = document.createTextNode(course.languages);
-        td5.appendChild(textNodeLanguage);
+        let roleName = '';
+        if (p.roleId === 1) {
+            roleName = 'Студент';
+        } else if (p.roleId === 2) {
+            roleName = 'Учитель';
+        } else {
+            roleName = 'Інша роль'; 
+        }
+        let textNodeRole = document.createTextNode(roleName);
+        td5.appendChild(textNodeRole);
 
         let td6 = tr.insertCell(5);
-        let textNodeParticipant = document.createTextNode(course.participants);
-        td6.appendChild(textNodeParticipant);
+        td6.appendChild(editButton);
 
         let td7 = tr.insertCell(6);
-        td7.appendChild(editButton);
-
-        let td8 = tr.insertCell(7);
-        td8.appendChild(deleteButton);
+        td7.appendChild(deleteButton);
     });
 
-    courses = data;
+    participants = data;
 }
 
-function _displayCategories(data) {
-    const add_select = document.getElementById('add-category');
-    const edit_select = document.getElementById('edit-category');
-    data.forEach(c => {
+function _displayRoles(data) {
+    const add_select = document.getElementById('add-role');
+    const edit_select = document.getElementById('edit-role');
+    data.forEach(r => {
         const opt_add = document.createElement('option');
-        opt_add.value = c.categoryId;
-        opt_add.textContent = c.name;
+        opt_add.value = r.roleId;
+        opt_add.textContent = r.name;
         add_select.appendChild(opt_add);
 
         const opt_edit = document.createElement('option');
-        opt_edit.value = c.categoryId;
-        opt_edit.textContent = c.name;
+        opt_edit.value = r.roleId;
+        opt_edit.textContent = r.name;
         edit_select.appendChild(opt_edit);
     });
 }
+
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Помилка',
+        text: message
+    });
+}
+

@@ -24,9 +24,9 @@ namespace CourseCatalogAPIWebApp.Controllers
         {
             var result = roles.Select(r => new
             {
-                Id = r.Id,
-                Name = r.Name,
-                Participants = r.Participants?.Select(participant => new
+                roleId = r.Id,
+                name = r.Name,
+                participants = r.Participants?.Select(participant => new
                 {
                     participantId = participant?.Id,
                     FirstName = participant?.FirstName,

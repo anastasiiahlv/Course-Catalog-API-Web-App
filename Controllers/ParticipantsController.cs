@@ -24,19 +24,20 @@ namespace CourseCatalogAPIWebApp.Controllers
         {
             var result = participants.Select(p => new
             {
-                Id = p.Id,
-                FirstName = p.FirstName,
-                LastName = p.LastName,
-                Email = p.Email,
-                PhoneNumber = p.PhoneNumber,
-                Role =  p.Role?.Name,
-                Courses = p.Courses?.Select(course => new
+                participantId = p.Id,
+                firstName = p.FirstName,
+                lastName = p.LastName,
+                email = p.Email,
+                phoneNumber = p.PhoneNumber,
+                //role = p.Role != null ? p.Role.Name : null,
+                roleId = p.RoleId,
+                courses = p.Courses?.Select(course => new
                 {
                     courseId = course?.Id,
                     courseName = course?.Name,
                     courseInfo = course?.Info,
                     level = course?.Level?.Name
-                })
+                }) 
             }).ToList();
 
             return result;
@@ -76,24 +77,21 @@ namespace CourseCatalogAPIWebApp.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Participant>> GetParticipant(int id)
         {
-            var participants = await _context.Participants
+            var participant = await _context.Participants
                 .Include(p => p.Role)
                 .Include(p => p.Courses)
                 .ThenInclude(course => course.Level)
-                .ToListAsync();
-
-            var participant = await _context.Participants.FindAsync(id);
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (participant == null)
             {
-                return NotFound(FormResponse("There is no participant with this ID.", 404));
+                return NotFound(new { message = "Немає користувача з таким ID.", code = 404 });
             }
 
-            var result = FormResult(new List<Participant> { participant });
             return Ok(new
             {
                 code = 200,
-                data = result
+                data = participant
             });
         }
 
@@ -104,8 +102,14 @@ namespace CourseCatalogAPIWebApp.Controllers
         {
             if (id != participant.Id)
             {
-                return BadRequest(FormResponse("The participant update request contains an invalid identifier.", 400));
+                return BadRequest(FormResponse("Запит на оновлення користувача містить невірний ідентифікатор.", 400));
             }
+            var existingParticipant = await _context.Participants
+                    .FirstOrDefaultAsync(p => p.Email == participant.Email && p.Id != id);
+            if (existingParticipant != null)
+            {
+                return Conflict(FormResponse("Користувач з такою електронною поштою вже існує.", 409));
+            }   
 
             _context.Entry(participant).State = EntityState.Modified;
 
@@ -117,7 +121,7 @@ namespace CourseCatalogAPIWebApp.Controllers
             {
                 if (!ParticipantExists(id))
                 {
-                    return NotFound(FormResponse("There is no participant with this ID.", 404));
+                    return NotFound(FormResponse("Немає користувача з таким ID.", 404));
                 }
                 else
                 {
@@ -125,7 +129,7 @@ namespace CourseCatalogAPIWebApp.Controllers
                 }
             }
 
-            return Ok(FormResponse("Updated successfully.", 200));
+            return Ok(FormResponse("Оновлення успішне.", 200));
         }
 
         // POST: api/Participants
@@ -133,9 +137,17 @@ namespace CourseCatalogAPIWebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Participant>> PostParticipant(Participant participant)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                               .Select(e => e.ErrorMessage)
+                                               .ToList();
+                return BadRequest(new { message = "Валідація не пройшла успішно.", errors });
+            }
+
             if (_context.Participants.Any(p => p.Email == participant.Email))
             {
-                return Conflict(FormResponse("A participant with this email already exists.", 409));
+                return Conflict(FormResponse("Користувач з такою електронною поштою вже існує.", 409));
             }
 
             _context.Participants.Add(participant);
@@ -144,7 +156,16 @@ namespace CourseCatalogAPIWebApp.Controllers
             var result = new
             {
                 code = 201,
-                data = participant
+                data = new
+                {
+                    participantId = participant.Id,
+                    firstName = participant.FirstName,
+                    lastName = participant.LastName,
+                    email = participant.Email,
+                    phoneNumber = participant.PhoneNumber,
+                    roleId = participant.RoleId,
+                    courses = participant.Courses
+                }
             };
 
             return CreatedAtAction("GetParticipant", new { id = participant.Id }, result);
@@ -157,7 +178,7 @@ namespace CourseCatalogAPIWebApp.Controllers
             var participant = await _context.Participants.FindAsync(id);
             if (participant == null)
             {
-                return NotFound(FormResponse("There is no participant with this ID.", 404));
+                return NotFound(FormResponse("Немає користувача з таким ID.", 404));
             }
 
             _context.Participants.Remove(participant);

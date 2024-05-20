@@ -22,5 +22,13 @@ namespace CourseCatalogAPIWebApp.Models
         public virtual DbSet<Level> Levels { get; set; }
         public virtual DbSet<Participant> Participants { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Participant>()
+                .HasOne(p => p.Role)
+                .WithMany(r => r.Participants)
+                .HasForeignKey(p => p.RoleId);
+        }
     }
 }

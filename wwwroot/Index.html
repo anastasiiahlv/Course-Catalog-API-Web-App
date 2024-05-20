@@ -1,33 +1,32 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Informatics-2024-Lab2 Course Catalog</title>
-    <link rel="stylesheet" href="css/site.css" />
+    <title>Lab 2</title>
+    <link rel="stylesheet" href="css\lab2.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
-    <h1>Курси</h1>
-    <h3>Додавання курсу</h3>
-    <form action="javascript:void(0);" method="POST" onsubmit="addCourse()">
-        <input maxlength="100" type="text" id="add-name" placeholder="Назва курсу">
-        <input type="text" id="add-info" placeholder="Опис">
-        <select id="add-level"></select>
-        <select id="add-category"></select>
-        <select id="add-language"></select>
-        <select id="add-teacher"></select>
-        <input type="submit" value="Add">
+    <h1>Додавання кориcтувача</h1>
+    <form action="javascript:void(0);" method="POST" onsubmit="addParticipant()">
+        <input maxlength="50" type="text" id="add-firstName" placeholder="Ім'я" required>
+        <input maxlength="50" type="text" id="add-lastName" placeholder="Прізвище" required>
+        <input maxlength="50" type="text" id="add-email" placeholder="Адреса електронної пошти" required>
+        <input maxlength="15" type="text" id="add-phoneNumber" placeholder="Номер телефону" required>
+        <select id="add-role"></select>
+        <input type="submit" value="Додати">
+        <div id="error-message" style="display:none; color: red;"></div>
     </form>
 
-    <div id="editCourse">
-        <h3>Редагування</h3>
-        <form action="javascript:void(0);" onsubmit="updateCourse()">
+    <div id="editForm" style="display:none;">
+        <h1>Форма редагування</h1>
+        <form action="javascript:void(0);" onsubmit="updateParticipant()">
             <input type="hidden" id="edit-id">
-            <input type="text" id="edit-name">
-            <input type="text" id="edit-info">
-            <select id="edit-level"></select>
-            <select id="edit-category"></select>
-            <select id="edit-language"></select>
-            <select id="edit-teacher"></select>
+            <input type="text" id="edit-firstName" placeholder="Ім'я">
+            <input type="text" id="edit-lastName" placeholder="Прізвище">
+            <input type="text" id="edit-email" placeholder="Email">
+            <input type="text" id="edit-phoneNumber" placeholder="Номер телефону">
+            <select id="edit-role"></select>
             <input type="submit" value="Зберегти">
             <a onclick="closeInput()" aria-label="Close">&#10006;</a>
         </form>
@@ -35,25 +34,25 @@
 
     <p id="counter"></p>
 
-    <table class="t_courses">
-        <tr>
-            <th>Назва</th>
-            <th>Опис</th>
-            <th>Рівень</th>
-            <th>Категорії</th>
-            <th>Доступні мови</th>
-            <th>Вчителі</th>
-        </tr>
-        <tbody id="courses"></tbody>
+    <table class="t_participants">
+        <thead>
+            <tr>
+                <th>Ім'я</th>
+                <th>Прізвище</th>
+                <th>Адреса електронної пошти</th>
+                <th>Номер телефону</th>
+                <th>Роль</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="participants"></tbody>
     </table>
 
     <script src="js/lab2.js" asp-append-version="true"></script>
     <script type="text/javascript">
-        getCourses();
-        getLevels();
-        getCategories();
-        getLanguages();
-        getTeachers();
+        getParticipants();
+        getRoles();
     </script>
 </body>
-</html> 
+</html>
